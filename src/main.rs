@@ -1,5 +1,7 @@
 //we use the attribute to ensure it’s executed with the actix runtime
 use actix_web::{App, HttpServer};
+use std::sync::*;
+use MongoDB::{options::ClientOptions, Client};
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
@@ -8,6 +10,12 @@ async fn main() -> std::io::Result<()> {
     //Creating HttpServer and App instance with few routes that
     //would point to controllers module which would handle the logic of each route
     //and serve it on port 8080
+    let mut client_options = ClientOptions::parse("MongoDB://127.0.0.1:27017/todolist")
+        .await
+        .unwrap();
+    client_options.app_name = Some("Todolist".to_string());
+    let client = web::Data::new(Mutex::new(Client::with_options(client_options).unwrap()));
+
     HttpServer::new(move || {
         App::new()
             .route("/todos", web::get().to(controllers::get_todos))
