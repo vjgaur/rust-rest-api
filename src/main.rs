@@ -1,7 +1,8 @@
 //we use the attribute to ensure it’s executed with the actix runtime
-use actix_web::{App, HttpServer};
+use actix_web::{web, App, HttpServer};
+use controllers::*;
 use std::sync::*;
-use MongoDB::{options::ClientOptions, Client};
+//use MongoDB::{options::ClientOptions, Client};
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
